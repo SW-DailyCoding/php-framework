@@ -2,20 +2,21 @@
 namespace App;
 
 class DB {
-    static $conn = null;
-    static function getConnection() {
-        if(self::$conn == null) {
-            self::$conn = new \PDO("mysql:host=localhost;dbname=seoul;charset=utf8mb4", "root", "", [
-                \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
-                \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+    static $db = null;
+    static function getDB() {
+        if(self::$db == null) {
+            self::$db = new \PDO("mysql:host=localhost;dbname=fund2;charset=utf8mb4", "root", "", [
+                19=>5,
+                3=>2,
             ]);
         }
-        return self::$conn;
+        return self::$db;
+
     }
 
     static function query($sql, $data = []) {
-        $q = self::getConnection()->prepare($sql);
-        $q->execute($data);
+        $q = self::getDB()->prepare($sql, $data);
+        $q-> execute($data);
         return $q;
     }
 
@@ -25,17 +26,5 @@ class DB {
     
     static function fetchAll($sql, $data = []) {
         return self::query($sql, $data)->fetchAll();
-    }
-
-    static function lastInsertId() {
-        return self::getConnection()-> lastInsertId();
-    }
-    
-    static function find($table, $id) {
-        return self::fetch("SELECT * FROM `$table` WHERE id = ?", [$id]);
-    }
-
-    static function who($user_email) {
-        return self::fetch("SELECT * FROM users WHERE user_email = ?", [$user_email]);
     }
 }

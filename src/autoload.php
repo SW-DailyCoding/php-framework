@@ -1,4 +1,5 @@
 <?php
+
 function classLoader($c) {
     require SRC . "/$c.php";
 }
